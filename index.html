@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpsReady WorkCenter — Featured Courses</title>
+
+<!--
+  ==========================================================================
+  OpsReady WorkCenter — Featured Courses widget
+  Alliance for Chemical Distribution · ACD U (acdlearning.docebosaas.com)
+
+  Drop-in as an iframe on any client site:
+
+    <iframe src="https://YOUR-HOST/opsready-featured-courses.html"
+            title="Featured Courses" loading="lazy"
+            style="width:100%;border:0;display:block" height="640"></iframe>
+
+  Optional auto-height — paste on the parent page:
+
+    <script>
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'opsready:height') {
+          document.querySelector('iframe[src*="opsready-featured-courses"]')
+                  .style.height = e.data.height + 'px';
+        }
+      });
+    <\/script>
+
+  Editable content lives in the CONFIG block below.
+  Artwork key `art:` = regclear | rd | hazmat | safety | regulatory
+  ==========================================================================
+-->
+
+<style>
+  :root {
+    --navy:        #122456;
+    --navy-700:    #1d2f6b;
+    --yellow:      #f5d414;
+    --yellow-dark: #d9bb00;
+    --surface:     #dde3f5;
+    --card:        #ffffff;
+    --ink:         #122456;
+    --ink-muted:   #5a6785;
+    --hairline:    rgba(18,36,86,.10);
+    --chip-bg:     #eef1fa;
+    --gap:         20px;
+    --pad:         30px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: transparent; }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Shell ---------- */
+  .shell {
+    max-width: 1340px;
+    margin: 20px auto;
+    padding: var(--pad);
+    background: var(--surface);
+    border-radius: 18px;
+  }
+  .shell__head {
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 16px;
+  }
+  .title {
+    display: flex; align-items: center; gap: 12px;
+    margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: -.01em;
+  }
+  .title::before {
+    content: ""; width: 4px; height: 22px; border-radius: 2px;
+    background: var(--yellow); flex: 0 0 auto;
+  }
+  .subtitle { margin: 8px 0 24px 16px; font-size: .82rem; color: var(--ink-muted); }
+
+  .btn-all {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border-radius: 10px;
+    background: var(--navy); color: #fff;
+    font-size: .8rem; font-weight: 700; text-decoration: none;
+    transition: background .15s ease;
+  }
+  .btn-all:hover { background: var(--navy-700); }
+  .btn-all svg   { width: 12px; height: 12px; }
+
+  /* ---------- Grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: var(--gap);
+  }
+  @media (min-width: 1180px) { .grid { grid-template-columns: repeat(5, 1fr); } }
+
+  /* ---------- Card ---------- */
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(18,36,86,.05);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(18,36,86,.12); }
+  .card:focus-within { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+  /* Artwork fills the whole media area, edge to edge */
+  .card__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    min-height: 140px;
+    overflow: hidden;
+  }
+  .card__media svg,
+  .card__media img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block; object-fit: cover;
+  }
+  .art__ring { transform-origin: 160px 88px; transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+  .card:hover .art__ring { transform: rotate(8deg); }
+
+  .credit {
+    position: absolute; left: 10px; bottom: 10px; z-index: 2;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--yellow); color: var(--navy);
+    font-size: .57rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  }
+
+  .card__body { display: flex; flex-direction: column; flex: 1; padding: 15px; }
+
+  .tag {
+    align-self: flex-start; max-width: 100%;
+    margin-bottom: 10px; padding: 3px 7px;
+    border-radius: 4px; background: var(--chip-bg); color: var(--ink-muted);
+    font-size: .57rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .card__title {
+    flex: 1; margin: 0 0 14px;
+    font-size: .85rem; font-weight: 700; line-height: 1.4; color: var(--ink);
+  }
+  .card__title a { color: inherit; text-decoration: none; }
+  .card__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+  .card__title a:focus-visible { outline: none; }
+
+  .meta {
+    display: flex; align-items: center; gap: 6px;
+    margin: 0 0 8px; font-size: .7rem; color: var(--ink-muted);
+  }
+  .meta svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: .75; }
+  .meta .lang { font-weight: 700; color: var(--ink); }
+  .meta .dot  { opacity: .4; }
+  .meta .rating { margin-left: auto; display: flex; align-items: center; gap: 3px; font-weight: 700; color: var(--ink); }
+  .meta .rating svg { fill: var(--yellow-dark); opacity: 1; }
+
+  .cta {
+    position: relative; z-index: 2;
+    display: block; margin-top: 4px; padding: 9px;
+    border: 1px solid var(--yellow); border-radius: 6px;
+    background: var(--yellow); color: var(--navy);
+    font-size: .75rem; font-weight: 700; text-align: center; text-decoration: none;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .cta:hover { background: var(--yellow-dark); border-color: var(--yellow-dark); }
+  .cta:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+  .msg {
+    grid-column: 1 / -1; padding: 28px;
+    border: 1px dashed var(--hairline); border-radius: 14px;
+    background: rgba(255,255,255,.55);
+    font-size: .85rem; color: var(--ink-muted); text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .card:hover { transform: none; }
+    .card:hover .art__ring { transform: none; }
+  }
+  @media (max-width: 560px) {
+    :root { --pad: 20px; --gap: 14px; }
+    .shell { margin: 0; border-radius: 12px; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="shell" aria-labelledby="fc-title">
+  <div class="shell__head">
+    <h2 class="title" id="fc-title">Featured Courses</h2>
+    <a class="btn-all" id="fc-all" href="#" target="_top" rel="noopener">
+      View all courses
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <p class="subtitle" id="fc-sub"></p>
+  <div class="grid" id="fc-grid" role="list"></div>
+</section>
+
+<script>
+/* ============================================================
+   CONFIG — the only block that needs editing.
+   Course data is taken from the live ACD U catalog.
+   `id` values are placeholders — swap in the real Docebo course
+   IDs (visible in the URL when you open a course).
+   ============================================================ */
+
+const CONFIG = {
+  base:     "https://acdlearning.docebosaas.com",
+  catalog:  "/learn/catalog",
+  subtitle: "Regulatory, Responsible Distribution and safety training for chemical distributors.",
+
+  courses: [
+    {
+      id: 101,
+      slug: "regclear-accidental-release-reporting-rule",
+      art: "regclear",
+      tag: "RegClear",
+      title: "RegClear — Accidental Release Reporting Rule",
+      lang: "EN", duration: "06m 00s", type: "E-learning",
+      credit: "Micro-course",
+      rating: null,
+      thumb: ""            // paste a Docebo thumbnail URL to override the artwork
+    },
+    {
+      id: 102,
+      slug: "responsible-distribution-2023-code-reinforcement",
+      art: "rd",
+      tag: "Responsible Distribution",
+      title: "Responsible Distribution 2023 — Code Reinforcement",
+      lang: "EN", duration: "", type: "E-learning",
+      credit: "RD Code",
+      rating: "5.0",
+      thumb: ""
+    },
+    {
+      id: 103,
+      slug: "hazmat-general-safety-and-security-awareness-training",
+      art: "hazmat",
+      tag: "Hazmat",
+      title: "Hazmat General, Safety and Security Awareness Training",
+      lang: "EN", duration: "2h 00m", type: "E-learning",
+      credit: "DOT required",
+      rating: null,
+      thumb: ""
+    },
+    {
+      id: 104,
+      slug: "process-safety-management-training",
+      art: "safety",
+      tag: "Safety",
+      title: "Process Safety Management Training",
+      lang: "EN", duration: "25m 00s", type: "E-learning",
+      credit: "OSHA PSM",
+      rating: null,
+      thumb: ""
+    },
+    {
+      id: 105,
+      slug: "epcra-emergency-planning-and-release-reporting-requirements",
+      art: "regulatory",
+      tag: "ACD Regulatory",
+      title: "EPCRA Emergency Planning and Release Reporting Requirements",
+      lang: "EN", duration: "30m 00s", type: "E-learning",
+      credit: "EPCRA",
+      rating: null,
+      thumb: ""
+    }
+  ]
+};
+
+/* ============================================================
+   Artwork — one roundel system, five treatments.
+   The RD accreditation badge is the template: a ring of type
+   wrapped around a central mark, on a category-specific field.
+   ============================================================ */
+
+const ART = {
+  regclear: {
+    ringTop: "RegClear",
+    ringBottom: "Regulatory clarity",
+    ringInk: "#ffffff",
+    field: `
+      <rect width="320" height="180" fill="#0b0b0d"/>
+      <g stroke="#ffffff" stroke-opacity=".07">
+        ${Array.from({length: 21}, (_, i) => `<line x1="${i*16}" y1="0" x2="${i*16}" y2="180"/>`).join("")}
+      </g>
+      <circle cx="160" cy="88" r="90" fill="url(#glow)"/>
+      <path d="M0 152h320" stroke="#f5d414" stroke-opacity=".5" stroke-width="1.5"/>`,
+    mark: `
+      <g transform="translate(160,88)" fill="#ffffff">
+        <path d="M0-26 -26-12h52z"/>
+        <rect x="-22" y="-8" width="6" height="26" rx="1"/>
+        <rect x="-10" y="-8" width="6" height="26" rx="1"/>
+        <rect x="4"   y="-8" width="6" height="26" rx="1"/>
+        <rect x="16"  y="-8" width="6" height="26" rx="1"/>
+        <rect x="-28" y="20" width="56" height="5" rx="1.5"/>
+      </g>`
+  },
+
+  rd: {
+    ringTop: "Responsible Distribution",
+    ringBottom: "ACD accredited",
+    ringInk: "#122456",
+    field: `
+      <rect width="320" height="180" fill="#eef3fb"/>
+      <g fill="none" stroke="#122456" stroke-opacity=".08">
+        <circle cx="160" cy="88" r="84"/><circle cx="160" cy="88" r="102"/><circle cx="160" cy="88" r="120"/>
+      </g>
+      <path d="M0 180 L120 0 L172 0 L52 180 Z" fill="#8cc63f" fill-opacity=".12"/>
+      <path d="M248 0 L320 0 L320 180 L286 180 Z" fill="#2f9fb0" fill-opacity=".10"/>`,
+    mark: `
+      <g transform="translate(160,88)">
+        <circle r="34" fill="#ffffff" stroke="#122456" stroke-opacity=".12"/>
+        <path d="M0-34a34 34 0 0 1 30 50l-11-6A22 22 0 0 0 0-22Z" fill="#2f9fb0"/>
+        <path d="M-30 14a34 34 0 0 1 30-48v12a22 22 0 0 0-19 30Z" fill="#8cc63f"/>
+        <text x="0" y="8" text-anchor="middle" font-family="Helvetica,Arial,sans-serif"
+              font-size="21" font-weight="700" letter-spacing="-.5" fill="#122456">acd</text>
+      </g>`
+  },
+
+  hazmat: {
+    ringTop: "Hazmat · Hazcom",
+    ringBottom: "HAZWOPER",
+    ringInk: "#111111",
+    field: `
+      <rect width="320" height="180" fill="#f5c400"/>
+      <g fill="#111111" fill-opacity=".13">
+        ${Array.from({length: 14}, (_, i) => `<path d="M${-40 + i*30} 180 L${-12 + i*30} 180 L${28 + i*30} 138 L${0 + i*30} 138 Z"/>`).join("")}
+      </g>
+      <path d="M0 138h320" stroke="#111111" stroke-opacity=".2"/>`,
+    mark: `
+      <g transform="translate(160,84)">
+        <path d="M0-30 30 22H-30Z" fill="#111111"/>
+        <path d="M0-18 20 17H-20Z" fill="#f5c400"/>
+        <rect x="-2.6" y="-9" width="5.2" height="16" rx="2.6" fill="#111111"/>
+        <circle cx="0" cy="12" r="2.8" fill="#111111"/>
+      </g>`
+  },
+
+  safety: {
+    ringTop: "Process safety",
+    ringBottom: "Prevention first",
+    ringInk: "#ffffff",
+    field: `
+      <rect width="320" height="180" fill="#12694a"/>
+      <path d="M0 180 Q80 118 160 148 T320 116 V180Z" fill="#0d5239" fill-opacity=".85"/>
+      <g stroke="#f5d414" stroke-opacity=".3" stroke-width="3" fill="none">
+        <path d="M-8 44 L22 22 L52 44"/>
+        <path d="M268 158 L298 136 L328 158"/>
+      </g>`,
+    mark: `
+      <g transform="translate(160,88)">
+        <path d="M-30 12a30 26 0 0 1 60 0z" fill="#f5d414"/>
+        <rect x="-36" y="12" width="72" height="7" rx="3.5" fill="#ffffff"/>
+        <path d="M-9 -2 l6 7 12-14" stroke="#12694a" stroke-width="4" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </g>`
+  },
+
+  regulatory: {
+    ringTop: "ACD Regulatory",
+    ringBottom: "EPCRA · RCRA",
+    ringInk: "#ffffff",
+    field: `
+      <rect width="320" height="180" fill="#122456"/>
+      <g stroke="#ffffff" stroke-opacity=".08">
+        ${Array.from({length: 9}, (_, i) => `<line x1="0" y1="${i*20+10}" x2="320" y2="${i*20+10}"/>`).join("")}
+      </g>
+      <rect x="232" y="-30" width="120" height="120" transform="rotate(18 292 30)"
+            fill="#2f9fb0" fill-opacity=".18"/>
+      <rect x="-40" y="120" width="110" height="110" transform="rotate(-14 15 175)"
+            fill="#f5d414" fill-opacity=".10"/>`,
+    mark: `
+      <g transform="translate(160,88)">
+        <g stroke="#ffffff" stroke-width="2.4" fill="none" stroke-linecap="round">
+          <path d="M0-26V22"/><path d="M-24 22h48"/><path d="M-26-14h52"/>
+        </g>
+        <path d="M-26-14 -38 8h24z" fill="#f5d414"/>
+        <path d="M26-14 14 8h24z" fill="#f5d414"/>
+      </g>`
+  }
+};
+
+function artwork(kind, i) {
+  const a = ART[kind] || ART.regulatory;
+
+  /* Two arcs, both reading left-to-right and upright:
+       top    — r62, drawn clockwise over the top of the roundel
+       bottom — r62, drawn counter-clockwise round the bottom, so the
+                glyphs stay the right way up instead of inverting
+     Each label is fitted to its own arc with textLength, so a long
+     category name can never overrun the path and get clipped. */
+  const TOP    = "M99 77.2 A62 62 0 0 1 221 77.2";
+  const BOTTOM = "M106.3 119 A62 62 0 0 0 213.7 119";
+  const topLen = 173, botLen = 130;   // arc lengths in viewBox units
+
+  const label = (txt, id, len) => {
+    if (!txt) return "";
+    const t = String(txt).toUpperCase();
+    const natural = t.length * 6.6;    // ~8px Helvetica bold + 1.8 tracking
+    const fit = natural > len
+      ? ` textLength="${len - 6}" lengthAdjust="spacingAndGlyphs"` : "";
+    return `<text font-family="Helvetica,Arial,sans-serif" font-size="8" font-weight="700"
+                  letter-spacing="1.8" fill="${a.ringInk}" fill-opacity=".85">
+              <textPath href="#${id}" startOffset="50%" text-anchor="middle"${fit}>${t}</textPath>
+            </text>`;
+  };
+
+  return `
+  <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice"
+       xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="glow-${i}">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <path id="top-${i}" fill="none" d="${TOP}"/>
+      <path id="bot-${i}" fill="none" d="${BOTTOM}"/>
+    </defs>
+    ${a.field.replace("url(#glow)", `url(#glow-${i})`)}
+    <g class="art__ring">
+      <circle cx="160" cy="88" r="70" fill="none" stroke="${a.ringInk}" stroke-opacity=".28"/>
+      <circle cx="160" cy="88" r="53" fill="none" stroke="${a.ringInk}" stroke-opacity=".14"/>
+      <circle cx="90"  cy="88" r="2" fill="${a.ringInk}" fill-opacity=".55"/>
+      <circle cx="230" cy="88" r="2" fill="${a.ringInk}" fill-opacity=".55"/>
+      ${label(a.ringTop, `top-${i}`, topLen)}
+      ${label(a.ringBottom, `bot-${i}`, botLen)}
+    </g>
+    ${a.mark}
+  </svg>`;
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+
+const ICONS = {
+  clock:  '<circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.4V8l2.4 1.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  screen: '<rect x="1.8" y="2.6" width="12.4" height="8.6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.4 13.6h5.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  star:   '<path d="M8 1.8 9.9 5.7l4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6L8 1.8Z"/>'
+};
+const svg = n => `<svg viewBox="0 0 16 16" aria-hidden="true">${ICONS[n]}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+const courseUrl = c => c.buyUrl || `${CONFIG.base}/learn/course/${c.id}/${c.slug}`;
+
+function card(c, i) {
+  const url    = courseUrl(c);
+  const cta    = c.buyUrl ? 'Buy this course' : 'Start learning';
+  const media  = c.thumb
+    ? `<img src="${esc(c.thumb)}" alt="" loading="lazy" decoding="async">`
+    : artwork(c.art, i);
+  const credit = c.credit ? `<span class="credit">${esc(c.credit)}</span>` : '';
+  const rating = c.rating ? `<span class="rating">${svg('star')}${esc(c.rating)}</span>` : '';
+  const dur    = c.duration
+    ? `<span class="dot">·</span>${svg('clock')}<span>${esc(c.duration)}</span>` : '';
+
+  return `<article class="card" role="listitem">
+      <div class="card__media">${media}${credit}</div>
+      <div class="card__body">
+        <span class="tag">${esc(c.tag)}</span>
+        <h3 class="card__title">
+          <a href="${esc(url)}" target="_top" rel="noopener">${esc(c.title)}</a>
+        </h3>
+        <p class="meta"><span class="lang">${esc(c.lang)}</span>${dur}${rating}</p>
+        <p class="meta">${svg('screen')}<span>${esc(c.type)}</span></p>
+        <a class="cta" href="${esc(url)}" target="_top" rel="noopener"
+           aria-label="${cta}: ${esc(c.title)}">${cta}</a>
+      </div>
+    </article>`;
+}
+
+function render() {
+  const grid = document.getElementById('fc-grid');
+  const list = CONFIG.courses || [];
+  document.getElementById('fc-all').href = CONFIG.base + CONFIG.catalog;
+  document.getElementById('fc-sub').textContent = CONFIG.subtitle || '';
+  grid.innerHTML = list.length
+    ? list.map(card).join('')
+    : `<div class="msg">No featured courses right now. Browse the full catalog to find your next requirement.</div>`;
+  postHeight();
+}
+
+function postHeight() {
+  parent.postMessage({ type: 'opsready:height', height: document.documentElement.scrollHeight }, '*');
+}
+
+render();
+window.addEventListener('load', postHeight);
+window.addEventListener('resize', postHeight);
+if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
+</script>
+
+</body>
+</html>
