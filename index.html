@@ -49,9 +49,14 @@
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: transparent; }
+  html { margin: 0; padding: 0; }
 
+  /* Full-bleed surface: the background colour now fills the whole
+     viewport, and the shell sits on top of it as a centred container. */
   body {
+    margin: 0;
+    padding: 0;
+    background: var(--surface);
     font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1.45;
@@ -62,10 +67,9 @@
   /* ---------- Shell ---------- */
   .shell {
     max-width: 1340px;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: var(--pad);
-    background: var(--surface);
-    border-radius: 18px;
+    background: transparent;
   }
   .shell__head {
     display: flex; flex-wrap: wrap; align-items: center;
@@ -188,7 +192,6 @@
   }
   @media (max-width: 560px) {
     :root { --pad: 20px; --gap: 14px; }
-    .shell { margin: 0; border-radius: 12px; }
   }
 </style>
 </head>
