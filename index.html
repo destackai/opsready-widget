@@ -12,7 +12,7 @@
 
   Drop-in as an iframe on any client site:
 
-    <iframe src="https://destackai.github.io/opsready-widget/"
+    <iframe src="https://YOUR-HOST/opsready-featured-courses.html"
             title="Featured Courses" loading="lazy"
             style="width:100%;border:0;display:block" height="640"></iframe>
 
@@ -227,6 +227,7 @@ const CONFIG = {
     {
       id: 101,
       slug: "regclear-accidental-release-reporting-rule",
+      link: "https://acdlearning.docebosaas.com/learn/catalog/view/8",
       art: "regclear",
       tag: "RegClear",
       title: "RegClear — Accidental Release Reporting Rule",
@@ -238,6 +239,7 @@ const CONFIG = {
     {
       id: 102,
       slug: "responsible-distribution-2023-code-reinforcement",
+      link: "https://acdlearning.docebosaas.com/learn/catalog/view/7",
       art: "rd",
       tag: "Responsible Distribution",
       title: "Responsible Distribution 2023 — Code Reinforcement",
@@ -249,6 +251,7 @@ const CONFIG = {
     {
       id: 103,
       slug: "hazmat-general-safety-and-security-awareness-training",
+      link: "https://acdlearning.docebosaas.com/learn/catalog/view/14",
       art: "hazmat",
       tag: "Hazmat",
       title: "Hazmat General, Safety and Security Awareness Training",
@@ -260,6 +263,7 @@ const CONFIG = {
     {
       id: 104,
       slug: "process-safety-management-training",
+      link: "https://acdlearning.docebosaas.com/learn/catalog/view/5",
       art: "safety",
       tag: "Safety",
       title: "Process Safety Management Training",
@@ -271,6 +275,7 @@ const CONFIG = {
     {
       id: 105,
       slug: "epcra-emergency-planning-and-release-reporting-requirements",
+      link: "https://acdlearning.docebosaas.com/learn/catalog/view/6",
       art: "regulatory",
       tag: "ACD Regulatory",
       title: "EPCRA Emergency Planning and Release Reporting Requirements",
@@ -457,7 +462,7 @@ const svg = n => `<svg viewBox="0 0 16 16" aria-hidden="true">${ICONS[n]}</svg>`
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
   ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
-const courseUrl = c => c.buyUrl || `${CONFIG.base}/learn/course/${c.id}/${c.slug}`;
+const courseUrl = c => c.link || c.buyUrl || `${CONFIG.base}/learn/course/${c.id}/${c.slug}`;
 
 function card(c, i) {
   const url    = courseUrl(c);
