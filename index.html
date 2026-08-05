@@ -119,6 +119,7 @@
   /* Artwork fills the whole media area, edge to edge */
   .card__media {
     position: relative;
+    display: block;
     aspect-ratio: 16 / 9;
     min-height: 140px;
     overflow: hidden;
@@ -153,9 +154,6 @@
     flex: 1; margin: 0 0 14px;
     font-size: .85rem; font-weight: 700; line-height: 1.4; color: var(--ink);
   }
-  .card__title a { color: inherit; text-decoration: none; }
-  .card__title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-  .card__title a:focus-visible { outline: none; }
 
   .meta {
     display: flex; align-items: center; gap: 6px;
@@ -476,14 +474,16 @@ function card(c, i) {
     ? `<span class="dot">·</span>${svg('clock')}<span>${esc(c.duration)}</span>` : '';
 
   return `<article class="card" role="listitem">
+      <!-- ═══ CLICKABLE LINK 1 of 3 · ARTWORK ═══
+           Target comes from courseUrl(c) below → currently the course's
+           catalogue "link". To retarget: edit that course's link: in CONFIG. -->
       <div class="card__media">${media}${credit}</div>
       <div class="card__body">
         <span class="tag">${esc(c.tag)}</span>
-        <h3 class="card__title">
-          <a href="${esc(url)}" target="_top" rel="noopener">${esc(c.title)}</a>
-        </h3>
+        <h3 class="card__title">${esc(c.title)}</h3>
         <p class="meta"><span class="lang">${esc(c.lang)}</span>${dur}${rating}</p>
         <p class="meta">${svg('screen')}<span>${esc(c.type)}</span></p>
+        <!-- Only clickable element on the card -->
         <a class="cta" href="${esc(url)}" target="_top" rel="noopener"
            aria-label="${cta}: ${esc(c.title)}">${cta}</a>
       </div>
