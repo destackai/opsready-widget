@@ -38,13 +38,13 @@ courses.
 
 Once GitHub Pages is switched on (Settings → Pages), the widget is published at:
 
-    https://YOURUSERNAME.github.io/REPONAME/
+    https://destackai.github.io/opsready-widget/
 
 That URL is what Docebo embeds. You can also open it directly in a browser
 to preview the widget exactly as visitors see it.
 
-> Replace `YOURUSERNAME` and `REPONAME` with the actual account and
-> repository name once known.
+> This is the live address once GitHub Pages is switched on
+> (Settings → Pages → Deploy from branch → main / root).
 
 ---
 
@@ -142,7 +142,7 @@ This only needs doing once per page. In a Docebo **Custom Content (HTML)**
 block, switch to the code view (the `< >` button) and paste:
 
     <iframe id="opsready-featured"
-        src="https://YOURUSERNAME.github.io/REPONAME/"
+        src="https://destackai.github.io/opsready-widget/"
         title="Featured Courses" loading="lazy" scrolling="no"
         style="width:100%;border:0;display:block;height:560px"></iframe>
     <script>
@@ -186,6 +186,6 @@ there's nothing sensitive in it.
 
 ## 8. Who built this
 
-Built by DESTACK for CSG Creative / Alliance for Chemical Distribution.
+Built by DESTACK/Joe Sayers for CSG Creative / Alliance for Chemical Distribution.
 For structural changes (new artwork themes, layout changes, more than five
 cards), contact the developer rather than editing the engine directly.
