@@ -10,19 +10,20 @@
   OpsReady WorkCenter — Featured Courses widget
   Alliance for Chemical Distribution · ACD U (acdlearning.docebosaas.com)
 
-  Drop-in as an iframe on any client site:
+  This file is hosted on GitHub Pages at:
+    https://destackai.github.io/opsready-widget/
 
-    <iframe src="https://YOUR-HOST/opsready-featured-courses.html"
-            title="Featured Courses" loading="lazy"
-            style="width:100%;border:0;display:block" height="640"></iframe>
+  To show it on a Docebo page (or any site), paste this into a Custom
+  Content (HTML) block using the code / <> view:
 
-  Optional auto-height — paste on the parent page:
-
+    <iframe id="opsready-featured"
+        src="https://destackai.github.io/opsready-widget/"
+        title="Featured Courses" loading="lazy" scrolling="no"
+        style="width:100%;border:0;display:block;height:560px"></iframe>
     <script>
       window.addEventListener('message', function (e) {
-        if (e.data && e.data.type === 'opsready:height') {
-          document.querySelector('iframe[src*="opsready-featured-courses"]')
-                  .style.height = e.data.height + 'px';
+        if (e.data && e.data.type === 'opsready:height' && e.data.height) {
+          document.getElementById('opsready-featured').style.height = e.data.height + 'px';
         }
       });
     <\/script>
